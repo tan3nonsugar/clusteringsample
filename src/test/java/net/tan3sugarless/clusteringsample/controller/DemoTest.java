@@ -24,9 +24,4 @@ public class DemoTest {
     void demo(int i, int j, int expected){
         Assertions.assertEquals(expected,i+j);
     }
-
-    @Test
-    void hoge(){
-        Assertions.assertEquals(1,2);
-    }
 }

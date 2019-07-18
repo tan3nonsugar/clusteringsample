@@ -30,7 +30,7 @@ public class SimilarityTest {
             Arguments.of(1,0,0,1,1.4142)
         );
     }
-    @ParameterizedTest
+    //@ParameterizedTest
     @MethodSource("testEuclideanDistanceProvider")
     @DisplayName("ユークリッド距離のテスト")
     void testEuclideanDistance(double xa, double ya, double xb, double yb, double expected){
