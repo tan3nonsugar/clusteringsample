@@ -8,6 +8,9 @@ import net.tan3sugarless.clusteringsample.exception.DimensionNotUnifiedException
 
 import java.util.List;
 
+/**
+ * ユークリッド距離空間上の座標集合
+ */
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -16,13 +19,21 @@ public class EuclideanSpace {
 
     private final List<List<Double>> points;
 
+    /**
+     * n次元座標のリストをセットする
+     *
+     * DimensionNotUnifiedException
+     * 座標の次元が統一されていないリストをセットした
+     *
+     * NullPointerException
+     * nullデータ、もしくはnull要素を含むデータを渡した
+     *
+     * @param points : n次元座標のリスト
+     */
     public EuclideanSpace(List<List<Double>> points){
-        long dimension = points.get(0).size();
-        points.stream().map(List::size).forEach(n ->{
-            if(dimension!=n){
-                throw new DimensionNotUnifiedException();
-            }
-        });
+        if(points.stream().mapToInt(List::size).distinct().count()!=1){
+            throw new DimensionNotUnifiedException();
+        }
         this.points = points;
     }
 }
