@@ -51,4 +51,35 @@ class EuclideanSpaceTest {
             Assertions.assertThrows(e.getClass(), () -> new EuclideanSpace(points));
         }
     }
+
+    // points : 0件/1件/2件, 0次元/1次元/2次元, 0/正/負
+    // target : null/空/1次元/2次元, null含む/含まない, 0/正/負/同一座標
+    static Stream<Arguments> testDistanceFromTargetProvider() {
+        return Stream.of(
+                //@formatter:off
+                Arguments.of(Collections.emptyList(), Collections.emptyList(), null, Collections.emptyList()),
+                Arguments.of(Collections.emptyList(), Arrays.asList(0.1), new DimensionNotUnifiedException(), Collections.emptyList()),
+                Arguments.of(Arrays.asList(Collections.emptyList()), Collections.emptyList(), null, Arrays.asList(0.0)),
+                Arguments.of(Arrays.asList(Collections.emptyList()), Arrays.asList(0.1), new DimensionNotUnifiedException(), Collections.emptyList()),
+                Arguments.of(Arrays.asList(Arrays.asList(3.0)), Arrays.asList(1.0), null, Arrays.asList(2.0)),
+                Arguments.of(Arrays.asList(Arrays.asList(3.0)), Arrays.asList(1.0, 2.0), new DimensionNotUnifiedException(), Collections.emptyList()),
+                Arguments.of(Arrays.asList(Arrays.asList(-1.0, 0.0)), Arrays.asList(2.0, -4.0), null, Arrays.asList(5.0)),
+                Arguments.of(Arrays.asList(Arrays.asList(-1.0, 0.0)), Arrays.asList(null, -4.0), new NullCoordinateException(), Collections.emptyList()),
+                Arguments.of(Arrays.asList(Arrays.asList(-3.0, 0.0), Arrays.asList(0.0, -4.0)), Arrays.asList(0.0, -4.0), null, Arrays.asList(5.0, 0.0))
+                //@formatter:on
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("testDistanceFromTargetProvider")
+    @DisplayName("距離算出のテスト")
+    void testDistanceFromTarget(List<List<Double>> points, List<Double> target, RuntimeException e, List<Double> distances) {
+        EuclideanSpace space = new EuclideanSpace(points);
+
+        if (e == null) {
+            Assertions.assertEquals(distances, space.distanceFromTarget(target));
+        } else {
+            Assertions.assertThrows(e.getClass(), () -> space.distanceFromTarget(target));
+        }
+    }
 }
