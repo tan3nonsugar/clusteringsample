@@ -25,17 +25,11 @@ public class EuclideanSpace {
 
     /**
      * n次元座標のリストと次元をセットする
-     * <p>
-     * DimensionNotUnifiedException
-     * 座標の次元が統一されていないリストをセットした
-     * <p>
-     * NullCoordinateException
-     * 座標の数値にnullが含まれていた
-     * <p>
-     * NullPointerException
-     * nullデータ、もしくはnull要素を含むデータを渡した
      *
      * @param points : n次元座標のリスト
+     * @throws DimensionNotUnifiedException : 座標の次元が統一されていないリストをセットした
+     * @throws NullCoordinateException      : 座標の数値にnullが含まれていた
+     * @throws NullPointerException         : nullデータ、もしくはnull要素を含むデータを渡した
      */
     public EuclideanSpace(List<List<Double>> points) {
         if (points.stream().mapToInt(List::size).distinct().count() > 1) {
