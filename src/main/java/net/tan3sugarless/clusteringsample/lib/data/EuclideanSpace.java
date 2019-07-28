@@ -6,10 +6,12 @@ import lombok.ToString;
 import lombok.Value;
 import net.tan3sugarless.clusteringsample.exception.DimensionNotUnifiedException;
 import net.tan3sugarless.clusteringsample.exception.NullCoordinateException;
+import net.tan3sugarless.clusteringsample.exception.UnexpectedCentroidException;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * ユークリッド距離空間上の座標集合
@@ -68,5 +70,32 @@ public class EuclideanSpace {
 
             return Math.sqrt(squareOfDistance);
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * インスタンスに所属する各点の中心点となる座標を求める
+     * <p>
+     * 中心は算術平均とする
+     *
+     * <pre>
+     *     n次元空間において、i番,(x11+x21+....+xm1)/m,目の点のj番目の要素をxijとして、     *
+     * [x11, x12,...,x1n],[x21, x22,...,x2n]
+     * とm個の点が与えられているとき、中心点の座標は、
+     *
+     * [(x11+x21+....+xm1)/m,(x12+x22+....+xm2)/m,...,(x1n+x2n+....+xmn)/m]
+     * となる。
+     *
+     * という計算を行う。
+     * </pre>
+     *
+     * @return 中心点の座標
+     * @throws UnexpectedCentroidException 基本あり得ない
+     */
+    public List<Double> getCentroid() {
+        return IntStream
+                .range(0, dimension)
+                .boxed()
+                .map(i -> points.stream().mapToDouble(point -> point.get(i)).average().orElseThrow(UnexpectedCentroidException::new))
+                .collect(Collectors.toList());
     }
 }
