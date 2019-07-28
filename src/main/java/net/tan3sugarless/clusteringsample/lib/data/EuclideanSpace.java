@@ -62,14 +62,15 @@ public class EuclideanSpace {
             throw new NullCoordinateException();
         }
 
-        return points.stream().map(point -> {
-            double squareOfDistance = 0.0;
-            for (int i = 0; i < target.size(); i++) {
-                squareOfDistance += Math.pow(point.get(i) - target.get(i), 2);
-            }
-
-            return Math.sqrt(squareOfDistance);
-        }).collect(Collectors.toList());
+        return points.stream().map(point ->
+                Math.sqrt(
+                        IntStream
+                                .range(0, target.size())
+                                .boxed()
+                                .mapToDouble(i -> Math.pow(point.get(i) - target.get(i), 2))
+                                .sum()
+                )
+        ).collect(Collectors.toList());
     }
 
     /**
